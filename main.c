@@ -1,7 +1,7 @@
 #include <stdio.h>
-void t1();
+void p6();
 int main()
 {
-    t1();
+    p6();
     return 0;
 }
