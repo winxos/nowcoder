@@ -1,16 +1,11 @@
-add = lambda x, y: x + y
-sub = lambda x, y: x - y
-mul = lambda x, y: x * y
-div = lambda x, y: x // y
-
-
 def lisp(p):
     st = []
-    ret = ""
-    for i in s:
-        if i == '(':
-            st.append('(')
-        elif i == ')':
+    add = lambda x, y: x + y
+    sub = lambda x, y: x - y
+    mul = lambda x, y: x * y
+    div = lambda x, y: x // y
+    for i in p:
+        if i == ')':
             t2 = st.pop()
             t1 = st.pop()
             op = st.pop()
@@ -19,13 +14,10 @@ def lisp(p):
                 ans = eval(op)(int(t1), int(t2))
                 st.append(ans)
             except ZeroDivisionError:
-                ret = "error"
-                break
+                return "error"
         else:
             st.append(i)
-    if ret == "":
-        ret = st.pop()
-    return ret
+    return st.pop()
 
 
 while True:
@@ -33,7 +25,6 @@ while True:
         s = input()
         s = s.replace('(', '( ')
         s = s.replace(')', ' )')
-        s = s.split()
-        print(lisp(s))
+        print(lisp(s.split()))
     except Exception:
         break

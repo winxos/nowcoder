@@ -68,6 +68,97 @@ wvv20200430
 
 30 3 6 0 123 3 453 7 3 9 453456 13 453 14 123 6 7 1 456 2 786 4 46 8 665 9 453456 11 456 12 786
 
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+static int cmp(const void *a,const void *b)
+{
+    return *(int *)a-*(int *)b;
+}
+int is_include(int *buf,int size,int n)
+{
+    for(int i=0;i<size;i++)
+    {
+        if(n==buf[i])
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+int array_to_set(int *buf,int size,int *buf2,int *n)
+{
+    int len=0;
+    for(int i=0;i<size;i++)
+    {
+        if(is_include(buf2,len,buf[i])==0)
+        {
+            buf2[len]=buf[i];
+            len++;
+        }
+    }
+    *n=len;
+}
+int num_is_in_num(int n1,int n2)
+{
+    char buf1[12],buf2[12];
+    sprintf(buf1,"%d",n1);
+    sprintf(buf2,"%d",n2);
+    return strstr(buf2,buf1)!=NULL;
+}
+void t1()
+{
+    int l1,l2,l3;
+    int buf1[1000],buf2[1000],buf3[1000];
+    while(~scanf("%d",&l1))
+    {
+        for(int i=0;i<l1;i++)
+        {
+            scanf("%d",&buf1[i]);
+        }
+        scanf("%d",&l2);
+        for(int i=0;i<l2;i++)
+        {
+            scanf("%d",&buf2[i]);
+        }
+        array_to_set(buf2,l2,buf3,&l3);
+        qsort(buf3,l3,sizeof(int),cmp);
+        int ans[1000]={0};
+        int ans_id=1;
+        for(int i=0;i<l3;i++)
+        {
+            l2=0;
+            for(int j=0;j<l1;j++)
+            {
+                if(num_is_in_num(buf3[i],buf1[j]))
+                {
+                    buf2[l2++]=j;
+                    buf2[l2++]=buf1[j];
+                }
+            }
+            if(l2>0)
+            {
+                ans[ans_id++]=buf3[i];
+                ans[ans_id++]=l2/2;
+                for(int j=0;j<l2;j++)
+                {
+                    ans[ans_id++]=buf2[j];
+                }
+            }
+        }
+        ans[0]=ans_id-1;
+        for(int i=0;i<ans_id;i++)
+        {
+            printf("%d ",ans[i]);
+        }
+        printf("\n");
+    }
+}
+```
+
+
+
 ```python
 while True:
     try:
@@ -122,7 +213,7 @@ Out of data space!
 2 0 -2
 1 -1 -3
 2 1 -2
-0 -1 3
+0 -1 -3
 2 0 -1
 1 -2 -3
 2 1 -1
@@ -130,66 +221,27 @@ Out of data space!
 2 1 0
 -1 -2 -3
 
-```java
-public class Main {
+```python
+while True:
+    try:
+        l = int(input())
+        for i in range(l):
+            d = int(input())
+            if d > 4 or d < -9:
+                print("Out of data Space!")
+            else:
+                print("%d %d %d\n%d %d %d" % (d + 5, d + 3, d + 1, d + 4, d + 2, d))
+                print("%d %d %d\n%d %d %d" % (d + 5, d + 4, d + 1, d + 3, d + 2, d))
+                print("%d %d %d\n%d %d %d" % (d + 5, d + 3, d + 2, d + 4, d + 1, d))
+                print("%d %d %d\n%d %d %d" % (d + 5, d + 4, d + 2, d + 3, d + 1, d))
+                print("%d %d %d\n%d %d %d" % (d + 5, d + 4, d + 3, d + 2, d + 1, d))
 
-	@SuppressWarnings("resource")
-	public static void main(String[] args) {
-		int n,t;
-		Scanner input = new Scanner(System.in);
-		n = input.nextInt();
-		for(int i = 0; i < n; i++) {
-			t = input.nextInt();
-			if(t >= -9 && t <= 4) {
-				show(t);
-			}else {
-				System.out.println("Out of data Space!");
-			}
-		}
-	}
+    except Exception as e:
+        print(e)
 
-	/*
-	 * 2	0	-2 			5 3 1
-	 * 1	-1	-3			4 2 0
-	 * 
-	 * 2	1	-2			5 4 1
-	 * 0	-1	-3			3 2 0
-	 * 
-	 * 2	0	-1			5 3 2
-	 * 1	-2	-3			4 1 0
-	 * 
-	 * 2	1	-1			5 4 2
-	 * 0	-2	-3			3 1 0
-	 * 
-	 * 2	1	0			5 4 3
-	 * -1	-2	-3			2 1 0
-	 */
-	private static void show(int n) {
-		int[] arr = new int[6];
-		for(int i = 0; i < 6; i++) {
-			arr[i] = n++;
-		}
-//		for(int i = 0; i < arr.length; i++) {
-//			System.out.print(arr[i]+" ");
-//		}
-		System.out.println(arr[5]+" "+arr[3]+" "+arr[1]);
-		System.out.println(arr[4]+" "+arr[2]+" "+arr[0]);
-		
-		System.out.println(arr[5]+" "+arr[4]+" "+arr[1]);
-		System.out.println(arr[3]+" "+arr[2]+" "+arr[0]);
-		
-		System.out.println(arr[5]+" "+arr[3]+" "+arr[2]);
-		System.out.println(arr[4]+" "+arr[1]+" "+arr[0]);
-		
-		System.out.println(arr[5]+" "+arr[4]+" "+arr[2]);
-		System.out.println(arr[3]+" "+arr[1]+" "+arr[0]);
-		
-		System.out.println(arr[5]+" "+arr[4]+" "+arr[3]);
-		System.out.println(arr[2]+" "+arr[1]+" "+arr[0]);
-	}
-
-}
 ```
+
+此题输出情况是固定的，很坑。
 
 ### 题目3 简单四则运算
 
@@ -232,7 +284,70 @@ char expStr: 表达式字符串；
 2）之后用符号索引进行for循环，如果检测为加号，因为我们需要把数字都放入数字的前一个索引里面，数字索引需要减去1先，之后再运算
 3）最后出栈结束返回number[0]就可以了
 
+```python
+def cc(op, t1, t2):
+    if op == "*": return t1 * t2
+    if op == "/": return t1 // t2
+    if op == "+": return t1 + t2
+    if op == "-": return t1 - t2
+
+
+def calc(n):
+    op = []
+    num = []
+
+    n = n.replace('+', ' + ')
+    n = n.replace('-', ' - ')
+    n = n.replace('*', ' * ')
+    n = n.replace('/', ' / ')
+    n = n.split()
+    i = 0
+    while i < len(n):
+        if n[i].isdigit():
+            num.append(int(n[i]))
+        elif n[i] == '/' or n[i] == '*':
+            t1 = num.pop()
+            t2 = int(n[i + 1])
+            r = cc(n[i], t1, t2)
+            num.append(r)
+            i += 1
+        elif n[i] == '+' or n[i] == '-':
+            op.append(n[i])
+        i += 1
+    while op:
+        c = op.pop()
+        t2 = num.pop()
+        t1 = num.pop()
+        num.append(cc(c, t1, t2))
+    return num[0]
+
+
+while True:
+    try:
+        s = input()
+        print(calc(s))
+    except Exception:
+        break
+```
+
+
+
 ### 题目4 文本逐词反转
+
+ https://blog.csdn.net/qj15223080209/article/details/83037877 
+
+ 将字符串按单词反转输出，如输入：hello sir 输出：olleh ris 。 
+
+```python
+while True:
+    try:
+        s = input().split()
+        print([i[::-1] for i in s])
+    except Exception:
+        break
+```
+
+
 
 ```c
 #include <string.h>
@@ -289,11 +404,160 @@ void t4()
 
 ### 题目5 检测链表中的循环
 
+ https://blog.csdn.net/ccmlove123/article/details/104052556 
+
+ https://blog.csdn.net/lqy971966/article/details/89818680 
+
+```python
+def chk(n):
+    low = 0
+    fast = 0
+    while True:
+        if fast >= len(n):
+            print("no")
+            break
+        low = n[low]
+        fast = n[fast]
+        if fast >= len(n):
+            print("no")
+            break
+        fast = n[fast]
+        if low == fast:
+            print(low)
+            print("loop")
+            ct = 0
+            while True:
+                low = n[low]
+                fast = n[n[fast]]
+                ct += 1
+                if low == fast:
+                    break
+            print(ct)
+            break
+
+
+while True:
+    try:
+        s = input().split()
+        s = [int(i) for i in s]
+        print(chk(s))
+    except Exception:
+        break
+```
+
 
 
 ### 题目6 打印任务排序
 
+ https://blog.csdn.net/Aoulun/article/details/79960147 
+
+一台打印机有若干个任务，但是打印机每次只能打印一个任务，每个任务是有优先级的，从1到9。打印的时候从序列的第一个开始，如果第一个的优先级不是最大的，则将其出队，并加入队尾。若其优先级是最大的，则直接打印该任务。设计算法实现如下功能：
+输入：
+（1）第一行：输入测试案例的个数，第二行：第一个数字是打印任务个数，第二个数据是目标任务在当前任务序列的位置
+输出：
+
+（2）目前任务打印完成需要的时间（假设打印一个任务需要1个单位时间，转移、判断任务不需要时间）
+（3）所有任务的打印顺序
+
+例如：
+
+1（只有一个测试用例）
+
+2 1（一共两个任务，目标任务的位置是1--任务是从0开始的）
+2 3（序列）
+
+输出：
+2 1 0
+ https://blog.csdn.net/fzuim/article/details/75647542 
+
+某个打印机根据打印队列执行打印任务。打印任务分为九个优先级，分别采用数字1~9表示，数字越大优先级越高。打印机每次从队列头部取出第一个任务A，然后检查队列余下任务中有没有比A优先级更高的任务，如果有比A优先级高的任务，则将任务A放到队列尾部，否则执行任务A的打印。请编写一个程序，根据输入的打印队列，输出实际打印顺序。
+函数原型：
+void printOrder(const int input[], int len, int output[])
+参数input表示打印队列，为1~9（优先级）组成的数组，数组索引0代表头部。对于C/C++参数len代表input数组长度，假定参数合法有效；
+
+```python
+def prt(n):
+    li = list(n)
+    ans = []
+    while len(li) > 1:
+        if li[0] < max(li[1:]):
+            li.append(li[0])
+            li = li[1:]
+        else:
+            ans.append(li[0])
+            li = li[1:]
+    ans.append(li[0])
+    return ans
+
+
+while True:
+    try:
+        s = input().split()
+        print(prt(s))
+    except Exception:
+        break
+```
+
+
+
 ### 题目7 jam计数法
+
+ https://blog.csdn.net/heisetiantang/article/details/50793621 
+
+题目描述
+Jam是个喜欢标新立异的科学怪人。他不使用阿拉伯数字计数，而是使用小写英文字母计数，他觉得这样做，会使世界更加丰富多彩。在他的计数法中，每个数字的位数都是相同的（使用相同个数的字母），英文字母按原先的顺序，**排在前面的字母小于排在它后面的字母**。我们把这样的“数字”称为Jam数字。在Jam数字中，每个字母互不相同，而且从左到右是严格递增的。每次，Jam还指定使用字母的范围，例如，从2到10，表示只能使用{b,c,d,e,f,g,h,i,j}这些字母。如果再规定位数为5，那么，紧接在Jam数字“bdfij”之后的数字应该是“bdghi”。（如果我们用U、V依次表示Jam数字“bdfij”与“bdghi”，则U<V< span>，且不存在Jam数字P，使U<P<V< span>）。你的任务是：对于从文件读入的一个Jam数字，按顺序输出紧接在后面的5个Jam数字，如果后面没有那么多Jam数字，那么有几个就输出几个。
+
+
+
+输入
+输入文件counting.in 有2行，第1行为3个正整数，用一个空格隔开：
+
+s t w
+
+（其中s为所使用的最小的字母的序号，t为所使用的最大的字母的序号。w为数字的位数，这3个数满足：1≤s<T< span>≤26, 2≤w≤t-s ）
+
+第2行为具有w个小写字母的字符串，为一个符合要求的Jam数字。
+
+所给的数据都是正确的，不必验证。
+
+输出
+输出文件counting.out 最多为5行，为紧接在输入的Jam数字后面的5个Jam数字，如果后面没有那么多Jam数字，那么有几个就输出几个。每行只输出一个Jam数字，是由w个小写字母组成的字符串，不要有多余的空格。
+
+样例输入
+2 10 5
+bdfij
+样例输出
+bdghi
+bdghj
+bdgij
+bdhij
+befgh
+
+ https://www.cnblogs.com/SJum/p/7383662.html 
+
+```python
+def pp(s, e, w, ss):
+    t = ss[-1] + 1
+    if t >= e - (w - len(ss)):
+        r = pp(s, e, w, ss[:-1])
+        r.extend([i for i in range(r[-1] + 1, r[-1] + w - len(r) + 1)])
+        return r
+    ss[-1] += 1
+    return list(ss)
+
+
+while True:
+    try:
+        s = input().split()
+        ss = [ord(i) - ord('a') for i in input()]
+        for j in range(5):
+            ss = pp(int(s[0]), int(s[1]), int(s[2]), ss)
+            print([chr(ord('a') + i) for i in ss])
+    except Exception as e:
+        print(e)
+```
+
+仅仅通过案例测试
 
 ### 题目8 单词排序输出
 
@@ -330,6 +594,20 @@ while True:
 
 
 ### 题目9 ***德州扑克
+
+ https://blog.csdn.net/wojiushi3344/article/details/8967735 
+
+ https://blog.csdn.net/biubiuibiu/article/details/80410346 
+
+ https://blog.csdn.net/a375849201893857/article/details/46492363 
+
+ 项目简介：依据德州扑克规则，使用C++编写牌手程序，参加扑克比赛。
+程序语言:C++ 通讯方式:TCP socket通讯
+开发工具:g++ 开发环境:Linux操作系统Ubuntu 
+
+2015年华为精英编程赛题目，几乎不可能用在招聘机试环节
+
+
 
 ### 题目10 电报内容为空字符串
 
@@ -377,47 +655,6 @@ while True:
 
 ### 题目11 华为机试 仿LISP字符串运算
 
- https://blog.csdn.net/happykocola/article/details/73864891 
-
-题目描述
-LISP语言唯一的语法就是括号要配对。
-形如 (OP P1 P2 …)，括号内元素由单个空格分割。
-其中第一个元素OP为操作符，后续元素均为其参数，参数个数取决于操作符类型
-注意：参数 P1, P2 也有可能是另外一个嵌套的 (OP P1 P2 …)
-当前OP类型为 quote / reverse / search / combine 字符串相关的操作：
-- quote: 引用一个字符串，即返回字符串本身内容
-参数个数 1
-- reverse: 把字符串反转，并返回
-参数个数 1
-- search: 在第一个字符串中查找第二个字符串的第一次出现，返回从这开始到结束的所有字符串
-如果查找不到，返回空字符串
-参数个数 2
-- combine: 把所有字符串组合起来
-参数个数不定，但至少 1 个
-其中P1, P2 等参数可能是带双引号的字符串,如 “abc”，也有可能是另外一个 (OP P1 P2 …)
-上述字符串包括引号；引号中间的所有字符，均为 ASCII 可打印字符，且不会再出现引号 (“)
-输出也为带双引号的字符串
-举例:
-输入字符串 输出结果
-(quote “!@#%”
-(reverse “a b c”) “c b a”
-(search “abcdef” “cd” ) “cdef”
-(search “abcdef” “xy” ) “”
-(combine “a” “b” “cde) “) “abcde) ”
-(search (combine “1234567890” “abcdefgh” “1234567890”) (reverse “dc”)) cdefgh123456789
-
-输入描述:
-合法C字符串，字符串长度不超过512；用例保证了无语法错误.
-
-输出描述:
-合法C字符串，需要带括号
-
-输入例子:
-(search “huawei” “we”)
-
-输出例子:
-“wei”
-
  [https://blog.csdn.net/liuxinyang666/article/details/79048639?utm_source=copy%C2%A0](https://blog.csdn.net/liuxinyang666/article/details/79048639?utm_source=copy ) 
 
  题目描述
@@ -434,19 +671,14 @@ LISP语言唯一的语法就是括号要配对。
 常规方法是用两个栈分别存放操作数和操作符，本文用一个栈来实现，首先从后往前提取操作数和操作符存放在vector，然后判断。
 
 ```python
-add = lambda x, y: x + y
-sub = lambda x, y: x - y
-mul = lambda x, y: x * y
-div = lambda x, y: x // y
-
-
 def lisp(p):
     st = []
-    ret = ""
-    for i in s:
-        if i == '(':
-            st.append('(')
-        elif i == ')':
+    add = lambda x, y: x + y
+    sub = lambda x, y: x - y
+    mul = lambda x, y: x * y
+    div = lambda x, y: x // y
+    for i in p:
+        if i == ')':
             t2 = st.pop()
             t1 = st.pop()
             op = st.pop()
@@ -455,13 +687,10 @@ def lisp(p):
                 ans = eval(op)(int(t1), int(t2))
                 st.append(ans)
             except ZeroDivisionError:
-                ret = "error"
-                break
+                return "error"
         else:
             st.append(i)
-    if ret == "":
-        ret = st.pop()
-    return ret
+    return st.pop()
 
 
 while True:
@@ -469,7 +698,9 @@ while True:
         s = input()
         s = s.replace('(', '( ')
         s = s.replace(')', ' )')
-        s = s.split()
+        print(lisp(s.split()))
+    except Exception:
+        break
 ```
 
 ### 题目12 华为集五福机试题
@@ -592,7 +823,39 @@ C字符串，“yes"或者"no”
 输入
 2244
 输出
-24 //此处是试题原本模样,应该输出no
+no
+
+```python
+def majong(n: list):
+    ans = []
+    for i, c in enumerate(n[:-2]):
+        if n[i] == n[i + 2]:
+            t = n[:i] + n[i + 3:]
+            ans += majong(t)
+    for i, c in enumerate(n[:-2]):
+        if (chr(ord(c) + 1) in n) and (chr(ord(c) + 2) in n):
+            t = list(n)
+            t.remove(c)
+            t.remove(chr(ord(c) + 1))
+            t.remove(chr(ord(c) + 2))
+            ans += majong(t)
+    if len(n) > 2:
+        ans.append(False)
+    elif n[0] == n[1]:
+        ans.append(True)
+    return ans
+
+
+while True:
+    try:
+        s = input()
+        print(True in majong(list(s)))
+    except Exception as e:
+        print(e)
+
+```
+
+代码未多案例测试
 
 ### 题目15 华为机试题目：删除重复字符串
 题目标题：
@@ -772,4 +1035,42 @@ while True:
         print(e)
         break
 ```
+
+### 题目20 字符串全排列
+
+ https://blog.csdn.net/weixin_39087263/article/details/82861384 
+
+题目：实现字符串的全排列
+
+输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc，则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+
+ https://www.jb51.cc/c/499686.html 
+
+```python
+def perm(n: list):
+    if len(n) == 1:
+        return n[0]
+    ans = []
+    for i in n:
+        rest = list(n)
+        rest.remove(i)
+        for j in perm(rest):
+            t = [i]
+            t.extend(j)
+            ans.append(t)
+    return ans
+
+
+while True:
+    try:
+        s = input()
+        ans = perm(list(s))
+        for i in ans:
+            print("".join(i), end=' ')
+    except Exception as e:
+        print(e)
+
+```
+
+全排列法
 
