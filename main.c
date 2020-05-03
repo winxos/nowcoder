@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-void p6();
+void w1();
 int main()
 {
-    printf("%d",strcmp("he","he"));
+    w1();
     return 0;
 }

@@ -2,48 +2,83 @@
 // Created by zx on 2020/4/29.
 // 简单四则运算
 #include <stdio.h>
-int cal(int c1, char op, int c2)
+#include <string.h>
+int cal(char op, int c1,  int c2) {
+  if (op == '+') {
+    return c1 + c2;
+  }
+  if (op == '-') {
+    return c1 - c2;
+  }
+  if (op == '*') {
+    return c1 * c2;
+  }
+  if (op == '/') {
+    return c1 / c2;
+  }
+  return 0;
+}
+#define is_digit(x) (x>='0' && x<='9')
+#define N_MAX 100
+struct stack{
+  int buf[N_MAX];
+  int pt;
+};
+struct stack data;
+struct stack op;
+void add(struct stack *s, int n)
 {
-    switch(op)
+  if(s->pt<N_MAX)
+  {
+    s->buf[s->pt]=n;
+    s->pt++;
+  }
+}
+int get(struct stack *s, int *n)
+{
+  if(s->pt>0)
+  {
+    s->pt--;
+    *n = s->buf[s->pt];
+    return 1;
+  }
+  return 0;
+}
+int calc(char *s) {
+  if (strlen(s) < 3) return -1;
+  char *p = s;
+  int t1,t2;
+  while (*p) {
+    if(is_digit(*p)){
+      add(&data,*p-'0');
+    }
+    else if(*p=='/' || *p=='*')
     {
-        case '+':
-            return c1+c2;
-            break;
-        case '-':
-            return c1-c2;
-            break;
-        case '*':
-            return c1*c2;
-            break;
-        case '/':
-            return c1/c2;
-            break;
-        default: ;
+      get(&data,&t1);
+      t2=*(p+1)-'0';
+      t1 = cal(*p,t1,t2);
+      add(&data,t1);
+      p++;
     }
-    return 0;
-}
-
-int calculate(int len, char *expStr)
-{
-    if (len < 3) return -1;
-    char *p = expStr;
-    int c1 = p[0]-'0';
-    char op = p[1];
-    int c2 = p[2]-'0';
-    p += 3;
-    while(*p) {
-        if (*p=='*' || *p=='/') {
-            c2 = cal(c2, *p, p[1]-'0');
-        } else {
-            c1 = cal(c1, op, c2);
-            op = *p;
-            c2 = p[1]-'0';
-        }
-        p += 2;
+    else if (*p == '+' || *p == '-') {
+      add(&op,*p);
     }
-    return cal(c1, op, c2);
+    p++;
+  }
+  while (op.pt>0)
+  {
+    int c;
+    get(&op,&c);
+    get(&data,&t2);
+    get(&data,&t1);
+    add(&data,cal((char)c,t1,t2));
+  }
+  get(&data,&t1);
+  return t1;
 }
-void t3()
-{
-    printf("%d",calculate(9,"1+4*5-8/3"));
+void t3() {
+  char buf[100];
+  while (~scanf("%s", buf)) {
+    printf("%d\n", calc(buf));
+  }
 }
